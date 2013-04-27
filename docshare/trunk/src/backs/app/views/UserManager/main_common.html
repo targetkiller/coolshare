@@ -1,0 +1,66 @@
+#{extends 'base-backs.html' /}
+ #{set main:'active' /} 
+
+
+<ul class="nav nav-tabs myul">
+	<li class="active"><a href="#">基本信息</a></li>
+	<li><a href="@{UserManager.main_contact}">联系信息</a></li>
+	<li><a href="@{UserManager.main_password}">修改密码</a></li>
+</ul>
+
+<form class="form-horizontal" action="@{UserManager.update()}"
+	method="post" id="updateForm">
+	<span class="big">基本信息</span>
+	 <span class="badge btn-inverse btn ml10" onclick="onUpdate()">保存</span> 
+		#{if status==200}
+	    <div class="alert alert-success" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${message}
+	    </div>
+	    #{/if}
+	    #{if status==400}
+	    <div class="alert alert-error" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${message}
+	    </div>
+	    #{/if}
+	<hr />
+	<div class="control-group">
+		<label class="control-label" for="name"><span class="red">*</span>昵称</label>
+		<div class="controls">
+			<input type="text" class="input-xlarge" onblur="onBlur(this);"
+				name="name" id="nickname" placeholder="字母，数字，汉字" value="${user.name}"> 
+			<span id="nametip"	class="label label-important" style="display: none;">昵称不能为空</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="account">帐号名</label>
+		<div class="controls">
+			<span class="input-xlarge uneditable-input" name="account"
+				id="account"> ${user.account} </span>
+		</div>
+	</div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function(){
+    	$("#message").fadeIn("slow").fadeTo(3E3,0.99).fadeOut("slow");
+     });
+	var flag = 1;
+	function onUpdate() {
+		if (flag == 0) {
+			alert("请改正错误后再保存！");
+		} else {
+			document.getElementById("updateForm").submit();
+		}
+	}
+	function onBlur(obj) {
+		if (obj.value == '') {
+			$("#nametip").show();
+			flag = 0;
+		} else {
+			$("#nametip").hide();
+			flag = 1;
+		}
+	}
+	
+</script>

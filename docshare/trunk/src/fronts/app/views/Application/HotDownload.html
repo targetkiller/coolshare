@@ -1,0 +1,38 @@
+#{extends 'base-fronts.html' /} 
+#{set HotDownload:'active' /}
+<!-- 内容页 -->
+<!-- 标题 -->
+<div class="maincontent">
+	<div class="maincontent-title">
+		<h2>[最热门的下载]</h2>
+		<p>看看最近大家都在下载什么</p>
+	</div>
+	<!-- 标题结束 -->
+	<!-- 正文 -->
+	<div class="documentlist">
+		<ul>
+		#{list items:documentList,as:'document'}
+		<li>
+				<div class="list-left">
+					<img class="block touxiang" src="@{'/public/common/images/file_icon'}/${document.sufix}.ico">
+					 <i class="icon-user"></i><a href="@{UserZone.Userinfo(document.userId)}" class="hoverlink">${document.authorName}</a>
+				</div>
+				<div class="list-right">
+					<h3 class="documentname"><a href="@{Preview.Preview(document.id)}" class="oneline hoverlink">${document.title}</a></h3>
+					<i class="icon-time"></i> ${document.time.asdate('yyyy年MM月dd')}
+					<i class="icon-download-alt"></i> ${document.downloadNum}
+					<i class="icon-tags"></i> 
+					#{list items:document.tagList,as:'tag'}
+					<a href="@{Application.SearchResult(tag.name,null,1)}">${tag.name}</a>  
+					#{/list}
+				</div>
+			</li>
+		#{/list}
+		</ul>
+	</div>
+</div>
+<!-- 正文结束 -->
+
+<!-- 内容页显示结束-->
+
+

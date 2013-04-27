@@ -1,0 +1,68 @@
+#{extends 'base-backs.html' /}
+#{set tag:'active' /}
+#{set 'moreScripts'}
+<script type="text/javascript"
+	src="@{'/public/common/javascripts/CheckDocument.js'}"></script>
+#{/set}	
+<div class="page-header">
+<h3 class="pagetitle">我的标签</h3>
+    <a href="@{DocumentManager.upload}"><button type='submit' class="btn-mini btn-inverse" >上传文档</button></a>
+    
+     <form action="@{DocumentManager.upload()}" enctype="multipart/form-data" id="fileform"  method="post"  >
+     #{authenticityToken /}
+	<input type="file" id="fileinput" class="hide" id="uploadfile" name="document" onchange="check_document(this.value);">
+	</form>
+    
+</div>
+<div>
+    
+	<button class="btn-small btn-info" onclick="addSystemTag();">添加标签</button>
+	<form action="@{Application.addUserTag}" id="tagform">
+	<span class="addnewtag" id="add_tag_btn" onclick="add_tag(this)">找不到合适标签?</span>
+	<span id="add_new_tag" class="hide">
+		<input type="text" class="input" name="tagName" placeholder="输入标签名">
+		<i class="icon-ok pointer" onclick="close_add_tag()"></i>
+	</span>
+	</form>
+</div>
+<div class="tagshow">
+    #{list items:myTagList,as:'tag'}
+	<span>${tag.name}<a href="@{Application.deleteTag(tag.id)}"><i class="icon-remove"></i></a></span>
+	#{/list}
+</div>
+
+
+<div id="addTagDialog" class="modal hide fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>添加标签</h3>
+    </div>
+    <form action="@{Application.addTag}">
+    <div class="modal-body">
+    #{list items:tagList,as:'tag'}
+    <input type="checkbox" name="tag" value=${tag.id}>${tag.name}<br>
+	#{/list}
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn" onclick="">确定</button>
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+	function upload_ok()
+	{
+		document.getElementById("fileinput").click();	
+	}
+	function add_tag(){
+		    $("#add_new_tag").show();
+	}
+	function close_add_tag(){
+		    $("#add_new_tag").hide();
+		    $("#tagform").submit();
+	}
+	function addSystemTag(){
+		$("#addTagDialog").modal("show");
+	}
+</script>

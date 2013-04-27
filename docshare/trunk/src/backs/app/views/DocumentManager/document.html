@@ -1,0 +1,138 @@
+#{extends 'base-backs.html' /} 
+#{set document:'active' /}
+
+<div class="page-header" >
+  <h3 class="pagetitle">我的文档</h3>
+    <a href="@{DocumentManager.upload}"><button type='submit' class="btn-mini btn-inverse" onclick="upload_ok()">上传文档</button></a>
+</div>
+<div class="row span12"> 
+	<span class="span5">
+<form class="form-search" action="@{DocumentManager.document}">
+	<span >&nbsp;&nbsp; 快速找到你的文档	&nbsp;&nbsp;&nbsp;</span>
+<input type="text" name="key" class="input-large search-query" value="${key}">
+<input type="text" name="page" value=1 class="hide">
+<button type="submit" class="btn"><i class="icon-search"></i></button>
+</form>
+</span>
+</div>
+<!--文档部分-->
+
+
+	<table class="table table-striped">
+	<colgroup>
+		<col width="40%"></col>
+		<col width="20%"></col>
+		<col width="8%"></col>
+		<col width="8%"></col>
+		<col width="8%"></col>
+		<col width="8%"></col>
+		<col width="8%"></col>
+	</colgroup>
+	<thead>
+		<tr>
+			<th>文档名称 <a href='@{DocumentManager.document(nowPage,key,flash.get("orderByName"))}'
+			class="thhighlight hoverlink"> <i class="icon-chevron-down"></i></th>
+			<th>类目 <a href='@{DocumentManager.document(nowPage,key,flash.get("orderByCateId"))}'
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i></th>
+			<th>类型 <a href="#"
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i></th>
+			<th>评分数 <a href="#"
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i></th>
+			<th>下载量 <a href='@{DocumentManager.document(nowPage,key,flash.get("orderByDownloadNum"))}'
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i></th>
+			<th>状态 <a href="#"
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i></th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		#{list items:documentList,as:'document'}
+		<tr id="${document.id}">
+			<td><a class="hoverlink" href="@{Preview.Preview(document.id)}">${document.title}</a></td>
+			<td>${document.cateName}</td>
+			<td><img src="@{'/public/common/images/file_icon'}/${document.sufix}.ico" class="square20"></img>${document.sufix}</td>
+			<td>${document.averageScore}</td>
+			<td>${document.downloadNum}</td>
+			#{if document.status==0}
+			<td>公开</td>
+			#{/if}
+			#{else}
+			<td>私有</td>
+			#{/else}
+			<td>
+				<a href="@{DocumentManager.editdoc(document)}"><i class="icon-edit"></i></a>
+				<i class="ml10 pointer icon-trash" onclick="delete_doc(${document.id});"></i>
+			</td>
+		</tr>
+		#{/list}
+	</tbody>
+</table>
+<div class="pagination ml25per" id="ListView">
+  <ul>
+            #{if nowPage > 1}<li><a href="@{DocumentManager.document(1,key,orderBy)}">首页</a></li>#{/if}
+			#{else}<li class="active"><a href="#">首页</a></li>#{/else} 
+			#{if nowPage > 1}<li><a href="@{DocumentManager.document(nowPage-1,key,orderBy)}">上一页</a></li>#{/if}
+			#{else}<li class="active"><a href="#">上一页</a></li>#{/else} 
+			
+			#{list items:pageList,as:'pagelist'} 
+			#{if nowPage == pagelist } <li class="active"><a href="#">${pagelist}</a></li> #{/if} 
+			#{else} <li><a href="@{DocumentManager.document(pagelist,key,orderBy)}">${pagelist}</a></li>#{/else} 
+			#{/list} 
+			
+			#{if nowPage < pageNum}<li><a href="@{DocumentManager.document(nowPage+1,key,orderBy)}">下一页</a></li>#{/if}
+			#{else}<li class="active"><a href="#">下一页</a></li>#{/else} 
+			#{if nowPage < pageNum}<li><a href="@{DocumentManager.document(pageNum,key,orderBy)}">尾页</a></li>#{/if}
+			#{else}<li class="active"><a href="#">尾页</a></li>#{/else}
+  </ul>
+</div>
+
+	<script type="text/javascript">
+	   function delete_doc(id){
+	    	if(confirm("你确定要删除此篇文档吗?")==1){
+	    		$.ajax({
+	 			   type:'post',
+	 			   url:'/DocumentManager/deleteDoc',
+	 			   data:{
+	 				   docId:id
+	 			   },
+	 			   dataType:'json',
+	 			   success:function(data){
+	 				   if(data.status==200){
+	 					   $("#"+id).hide(function(){alert("删除文档成功!");} );
+	 				   }else{
+	 					   alert("删除文档失败!");
+	 				   }
+	 			   },
+	 			   error:function(){
+	 				  alert("删除文档失败!");
+	 			   }
+	 			   }) 		
+	    	}
+	    	
+	    }
+		function showOrNot(){
+		if(${pageList.size}==1)
+			{
+			 $("#ListView").hide();
+			}
+		}
+		showOrNot();
+		function changeState(obj){
+		var state=obj.getAttribute("dataValue");
+		if(state=="公开")
+		{
+			state="私有";
+			obj.innerText="私有";
+		}
+		else if(state=="私有")
+		{
+			state="公开";
+			obj.innerText="公开";
+		}
+		obj.setAttribute("dataValue",state);
+	}
+	function upload_ok()
+	{
+	document.getElementById("fileinput").click();	
+	}
+	</script>

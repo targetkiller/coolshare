@@ -1,0 +1,111 @@
+#{extends 'base-backs.html' /} 
+#{set collection:'active' /}
+#{set 'moreScripts'}
+<script type="text/javascript"
+	src="@{'/public/common/javascripts/CheckDocument.js'}"></script>
+#{/set}	
+
+
+<div class="page-header">
+	<h3 class="pagetitle">我的收藏</h3>
+	<a href="@{DocumentManager.upload}"><button type='submit' class="btn-mini btn-inverse" onclick="upload_ok()">上传文档</button></a>
+</div>
+<div class="row span12">
+	<span class="span5">
+		<form class="form-search" action="@{DocumentManager.collection}">
+			<span >&nbsp;&nbsp; 快速找到你的收藏
+				&nbsp;&nbsp;&nbsp;</span> <input type="text" name="key"
+				class="input-large search-query" value="${key}">
+				<input type="text" name="page" value=1 class="hide">
+			<button type="submit" class="btn">
+				<i class="icon-search"></i>
+			</button>
+		</form>
+	</span>
+</div>
+<!--文档部分-->
+
+<table class="table table-striped">
+	<colgroup>
+		<col width="40%"></col>
+		<col width="20%"></col>
+		<col width="10%"></col>
+		<col width="10%"></col>
+
+	</colgroup>
+	<thead>
+		<tr>
+			<th>文档名称 <a href="#"
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i>
+			</a></th>
+			<th>收藏日期<a href="#"
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i>
+			</a></th>
+			<th>作者<a href="#" class="thhighlight hoverlink">
+					<i class="icon-chevron-down"></i>
+			</a></th>
+			<th>收藏人数<a href="#"
+				class="thhighlight hoverlink"> <i class="icon-chevron-down"></i>
+			</a></th>
+		</tr>
+	</thead>
+	<tbody>
+		#{list items:documentList,as:'document'}
+		<tr id="${document.id}">
+			<td><a href="@{Preview.Preview(document.id)}">${document.title}</a><span
+				class="badge btn-info btn highlight ml10" onclick="cancel_collect(${document.id});">取消收藏</span></td>
+			<td>${document.time.asdate('yyyy年MM月dd')}</td>
+			<td>${document.authorName}</td>
+			<td>${document.getCollectionNum()}</td>
+		</tr>
+		#{/list}
+	</tbody>
+</table>
+<div class="pagination" style="margin-left: 25%" id="ListView">
+	<ul>
+		#{if nowPage > 1}
+		<li><a href="@{DocumentManager.collection(1,key)}">首页</a></li>#{/if}
+		#{else}
+		<li class="active"><a href="#">首页</a></li>#{/else} #{if nowPage > 1}
+		<li><a href="@{DocumentManager.collection(nowPage-1,key)}">上一页</a></li>#{/if}
+		#{else}
+		<li class="active"><a href="#">上一页</a></li>#{/else} #{list items:pageList,as:'pagelist'} #{if nowPage == pagelist }
+		<li class="active"><a href="#">${pagelist}</a></li> #{/if} #{else}
+		<li><a href="@{DocumentManager.collection(pagelist,key)}">${pagelist}</a></li>#{/else}
+		#{/list} #{if nowPage < pageNum}
+		<li><a href="@{DocumentManager.collection(nowPage+1,key)}">下一页</a></li>#{/if}
+		#{else}
+		<li class="active"><a href="#">下一页</a></li>#{/else} #{if nowPage < pageNum}
+		<li><a href="@{DocumentManager.collection(pageNum,key)}">尾页</a></li>#{/if}
+		#{else}
+		<li class="active"><a href="#">尾页</a></li>#{/else}
+	</ul>
+</div>
+<script type="text/javascript">
+    function cancel_collect(id){
+    	if(confirm("你确定要取消该收藏吗?")==1){
+    		$.ajax({
+ 			   type:'post',
+ 			   url:'/DocumentManager/cancelCollect',
+ 			   data:{
+ 				   docId:id
+ 			   },
+ 			   dataType:'json',
+ 			   success:function(data){
+ 				   if(data.status==200){
+ 					   $("#"+id).hide(function(){alert("取消收藏成功!");} );
+ 				   }else{
+ 					   alert("取消收藏失败!");
+ 				   }
+ 			   },
+ 			   error:function(){
+ 				  alert("取消收藏失败!");
+ 			   }
+ 			   }) 		
+    	}
+    }
+	
+	function upload_ok() {
+		document.getElementById("fileinput").click();
+	}
+</script>

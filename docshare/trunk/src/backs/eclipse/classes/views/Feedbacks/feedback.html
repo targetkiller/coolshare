@@ -1,0 +1,68 @@
+#{extends 'base-father.html' /} 
+<div class="feedcontent">
+	<div class="feedtitle">
+		<h1>意见反馈</h1>
+	</div>
+	<form class="form-horizontal" action="@{Feedbacks.addFeedback}">
+	#{if flash.error}
+	    <div class="alert alert-error" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${flash.error}
+	    </div>
+	    #{/if}
+	    #{if flash.success}
+	    <div class="alert alert-success" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${flash.success}
+	    </div>
+	    #{/if}
+	       <div class="control-group">
+			  	<label class="control-label" for="title">标题</label>
+				  <div class="controls">
+				    <input type="text" class="input-xlarge" value="${flash.title}" name="title" id="title" placeholder="您的意见标题">
+				  </div>
+		  </div>
+	   	 <div class="control-group">
+			  <label class="control-label" for="content"><span class="red">*</span>问题详情</label>
+			  <div class="controls">
+			    <textarea type="text" name="content"  placeholder="告诉我们你的反馈意见吧" class="input-xlarge" id="content">${flash.content}</textarea>
+			  </div>
+		  </div>
+		   <div class="control-group">
+			  <label class="control-label" for="name"><span class="red">*</span>您的姓名</label>
+				  <div class="controls">
+				    <input type="text" name="username" value="${flash.username}" class="input-xlarge" id="name" placeholder="我们会为您保密">
+				  </div>
+		  </div>
+		    <div class="control-group">
+			  <label class="control-label" for="type">问题的严重性</label>
+				  <div class="controls">
+				     <select name="serious" id="type">
+			                <option value=0>请选择</option>
+			                <option value=1>不清楚</option>
+			                <option value=2>有问题,但不影响我使用</option>
+			                <option value=3>严重影响我使用!</option>
+			                <option value=4>我受不了了!</option>
+			              </select>
+				  </div>
+		  	</div>
+			<div class="control-group">
+			  <label class="control-label" for="email">您的邮箱</label>
+				  <div class="controls">
+				    <input type="text" value="${flash.email}" class="input-xlarge" name="email" id="email" placeholder="我们会尽快回复您">
+				  </div>
+		    </div>
+		    <div class="form-option">
+		    	<button type="submit" class="btn btn-primary">确定</button>
+		    	<a class="btn" href="&{'fronts.base'}">返回</a>
+		    </div>
+		  
+	</form>
+</div>
+<script language="javascript">
+$(document).ready(function(){
+	$("#message").fadeIn("slow").fadeTo(3E3,0.99).fadeOut("slow");
+ });
+ 
+</script>
+  

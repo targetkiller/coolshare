@@ -1,0 +1,32 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+
+GET     /                                     DocumentManager.upload_in
+POST    /Application/ajaxAddCate              Application.ajaxAddCate
+ 
+GET     /UserManager/main_common              UserManager.main_common
+GET     /UserManager/main_contact             UserManager.main_contact
+GET     /UserManager/main_password            UserManager.main_password
+GET     /Application/tag                      Application.tag    
+
+#DocumentManager
+POST    /DocumentManager/document             DocumentManager.document
+POST    /DocumentManager/upload               DocumentManager.upload  
+GET     /DocumentManager/upload_in            DocumentManager.upload_in
+GET     /DocumentManager/editdoc              DocumentManager.editdoc
+GET     /DocumentManager/addDocumentInfo      DocumentManager.addDocumentInfo
+POST    /DocumentManager/updateDocumentInfo   DocumentManager.updateDocumentInfo
+POST    /DocumentManager/deleteDoc  		  DocumentManager.deleteDoc
+
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}

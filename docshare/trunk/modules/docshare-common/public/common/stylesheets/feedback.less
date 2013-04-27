@@ -1,0 +1,29 @@
+.feedback-link-box {
+	@bgColor: #0072C6;
+	position: fixed;
+	z-index: 999;
+	bottom: 0;
+	right: 10px;
+	margin-bottom: 0;
+	border-bottom: 0;
+	line-height: 30px;
+	border-radius: 4px 4px 0px 0px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.246094) 1px 1px 1px inset, rgba(0, 0, 0, 0.496094) 0px 1px 2px;
+	box-shadow: rgba(255, 255, 255, 0.246094) 1px 1px 1px inset, rgba(0, 0, 0, 0.496094) 0px 1px 2px;
+	background-color: @bgColor;
+	
+	&:hover{
+		background-color: darken(@bgColor, 5%);		
+	}
+	
+	a{
+		color: white;
+		padding: 5px 10px;
+		text-decoration: none;
+		
+		&:hover{
+			color: #f5f5f5;
+			text-decoration: none;
+		}
+	}
+}

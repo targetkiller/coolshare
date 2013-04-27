@@ -1,0 +1,193 @@
+#{extends 'base-backs.html' /}
+
+<img id="loading" class="hide square20" src="@{'/public/common/images/loading.gif'}" />
+<form class="form-horizontal" action="@{DocumentManager.checkFileInfo}" enctype="multipart/form-data" id="fileform" method="post" onsubmit="return check_document();">
+	#{authenticityToken /}
+	<div class="big uploadtitle">基本信息</div>
+	#{if status==200}
+	    <div class="alert alert-success" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${message}
+	    </div>
+	    #{/if}
+	    #{if status==400}
+	    <div class="alert alert-error" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${message}
+	    </div>
+	    #{/if}
+	<hr />
+	<div class="control-group">
+		<label class="control-label" for="uploadfile">
+			<span class="red">*</span>文档
+		</label>
+		<div class="controls">		
+		     <input type="file" name="document" id="uploadfile"/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="title_input"><span
+			class="red">*</span>标题</label>
+		<div class="controls">
+			<input type="text" class="input-xlarge span5" id="title_input" onblur="onBlur();" 
+				name="title"  placeholder="文档标题" value="${flash.title}"/>
+				<span id="titletip" class="label label-important hide" >文档标题不能为空</span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="summary_input">文档简介</label>
+		<div class="controls">
+			<textarea rows="5" class="span5" name="summary" placeholder="文档简介" ></textarea>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="type">分类</label>
+		<div class="controls">
+			<select name="cateId" id="type">
+			    <option value=-1></option>
+			    #{list items:cateList,as:'cate'}
+                <option value=${cate.id}>${cate.name}</option>
+                #{/list}
+			</select>
+			<span class="badge btn-inverse btn ml10" id="add" onclick="add_cate();">添加</span>
+		</div>
+	</div>	
+	<div class="control-group">
+		<label class="control-label" for="doctype">文档类型</label>
+		<div class="controls">
+			<select name="type" id="doctype">
+			<option value=0>公开</option>
+			<option value=1>私有</option>
+			</select>
+		</div>
+	</div>  
+	
+	
+	
+	
+	
+	<div id="addTagDialog" class="modal hide fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>添加标签</h3>
+    </div>
+    <div class="modal-body">
+    #{list items:tagList,as:'tag'}
+    <input type="checkbox" name="tag" value=${tag.id}>${tag.name}<br>
+	#{/list}
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn">确定</button>
+    </div>
+</div>
+	
+	
+	</form>
+	
+	<div class="uploadbtn">
+		<button  class="btn btn-primary" onclick="addTag();">添加标签并上传</button>
+	</div>
+
+
+
+<div id="addCateDialog" class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>添加类目</h3>
+    </div>
+    <div class="modal-body">
+    <label class="control-label" for="cate_name">类目名称</label>
+    <input type="text" class="input-xlarge span3 ml5 mt10" id="cate_name" placeholder="输入分类名"/>
+    <span id="tip" class="label label-important hide"></span>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn" onclick="ajax('#cate_name');">确定</button>
+        <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+function addTag(){
+	$("#addTagDialog").modal("show");
+}
+
+$(document).ready(function(){
+	$("#message").fadeIn("slow").fadeTo(3E3,0.99).fadeOut("slow");
+ });
+document.getElementById('uploadfile').onchange = function () {
+      var arr=this.value.split('\\');
+	  document.getElementById('title_input').setAttribute("value",arr[arr.length-1]);
+	};
+	function check_document(){
+	    var flag=1; 
+	    var hash={
+	    		'doc'  : 1,
+	    		'docx' : 1,
+	    		'ppt'  : 1,
+	    		'pptx' : 1,
+	    		'txt'  : 1,
+	    		'pdf'  : 1,
+	    		'gif'  : 1,
+	    		'jpg'  : 1,
+	    		'png'  : 1,
+	    }
+	    var filename=$("#uploadfile").val();
+	    var arr=filename.split('.');
+	    var ext = arr[arr.length-1];
+	    if(hash[ext]){
+	    	return true;
+	    }else{
+	    	alert("您上传的文件不合法！");
+	    	return false;
+	    }
+	    if($("#title_input").val()==null||$("#title_input").val()==''){
+			   $("#titletip").show();
+			   return false;
+	    }
+	}
+   function onBlur(){
+	   if($("#title_input").val()==null||$("#title_input").val()==''){
+		   $("#titletip").show();
+	   }else{
+		   $("#titletip").hide();
+	   }
+   }
+   function add_cate(){
+	   $("#cate_name").value='';
+	   $("#tip").hide();
+	   $("#addCateDialog").modal("show")
+   }
+   function ajax(id){
+	   if($(id).val()==null||$(id).val()==''){
+		   $("#tip").html('类名不能为空!');
+		   $("#tip").show();
+	   }else{
+		   var catename=$(id).val();
+		   $.ajax({
+			   type:'post',
+			   url:'/Application/ajaxAddCate',
+			   data:{
+				   name:$(id).val()
+			   },
+			   dataType:'json',
+			   success:function(data){
+				   if(data.status==200){
+					   $("#type").append("<option value="+data.id+" selected='selected'>"+catename+"</option>");
+					   $("#addCateDialog").modal("hide");
+					   alert("添加成功!");
+				   }else{
+					   $("#addCateDialog").modal("hide");
+					   alert("添加失败,可能类目已经存在!");
+				   }
+			   },
+			   error:function(){
+				   $("#addCateDialog").modal("hide");
+				   alert("添加失败!");
+			   }
+			   })
+	   }
+	   
+   }   
+</script>

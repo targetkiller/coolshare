@@ -1,0 +1,85 @@
+#{extends 'base-father.html' /} 
+
+<div class="userzone">
+	<div class="name">
+		<span class="big strong">${user?.name}的个人空间&nbsp;&nbsp;</span>
+		<span><img class="touxiang" src="@{'/public/common/images/touxiang.jpg'}" /></span>
+	</div>
+	<div class="allblock">
+		<div class="blocktwoimg imgblock other">
+			<img src="@{'/public/common/images/imgblock.png'}" />
+		</div>
+		<div class="blockimg docblock pointer">
+			<img src="@{'/public/common/images/docimg.png'}" onclick="lookdocs()"/>
+		</div>
+		<div class="blockimg homeblock other pointer">
+			<img src="@{'/public/common/images/homeimg.png'}" onclick="backtohome()" />
+		</div>
+		<div class="blocktwo chatblock other">
+			<img src="@{'/public/common/images/chatimg.png'}" />
+			<div class="text">${userInfo?.qq} / ${userInfo?.msn}</div>
+		</div>
+		<div class="blocktwo telblock other">
+			<img src="@{'/public/common/images/telimg.png'}" />
+			<div class="text">${userInfo?.longTel}/${userInfo?.shortTel}</div>
+		</div>
+		<div class="blocktwo tagblock other">
+			<img src="@{'/public/common/images/tagimg.png'}" />
+			<div class="text">
+			#{list items:tagList,as:'tag'}
+			<a href="#">${tag.name}</a>
+			#{/list}
+			</div>
+		</div>
+		<div class="blocktwo emailblock other">
+			<img src="@{'/public/common/images/emailimg.png'}" />
+			<div class="text">${userInfo?.email}</div>
+		</div>
+	</div><!-- allblock -->
+	<div class="listview hide">
+		<div class="backblockimg backdocblock pointer">
+			<img src="@{'/public/common/images/docimg.png'}" onclick="backdocs()"/>
+		</div>
+		<div class="userinfo-doclist" id="mydoclist">
+			<ul>
+				#{list items:user.getDocList(),as:'document'}
+				<li>
+					<div class="list-left">
+						<img class="block touxiang" src="@{'/public/common/images/file_icon'}/${document.sufix}.ico">
+						 <i class="icon-user"></i><a href="@{UserZone.Userinfo(document.userId)}" class="hoverlink">${document.getAuthorName()}</a>
+					</div>
+					<div class="list-right">
+						<h3 class="documentname"><a href="@{Preview.Preview(document.id)}" class="hoverlink">${document.title}</a></h3>
+						<i class="icon-time"></i> ${document.time.asdate('yyyy年MM月dd')}
+						<i class="icon-tags"></i>
+						#{list items: document.tagList,as:'tag'}
+						<a href="#">${tag.name}</a> 
+						#{/list} 
+						<i class="icon-star"></i> ${document.getCollectionNum()}
+						<i class="icon-download-alt"></i> ${document.downloadNum}
+					</div>
+				</li>
+				#{/list}	
+			</ul>
+		</div>
+	</div><!--listview-->
+</div><!--userzoon-->
+
+<script type="text/javascript">
+	function lookdocs(){
+			$(".allblock").hide();
+	       $(".listview").show();
+		  obj.setAttribute("id",1);
+		}
+	function backdocs(){
+		  $(".allblock").show();
+		  $(".listview").hide();
+		  obj.setAttribute("id",0);
+		}
+	function backtohome(){
+		window.location.href="&{'fronts.base'}"
+	}
+</script>
+
+
+

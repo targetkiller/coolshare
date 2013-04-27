@@ -1,0 +1,7 @@
+# Default docshare-common messages
+# You can specialize this file for each language.
+# For exemple, for french create a messages.fr file
+
+#docshare-common.name=docshare-common
+backs.base=http://local.scauhci.org:9401/
+fronts.base=http://local.scauhci.org:9403/

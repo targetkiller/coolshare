@@ -1,0 +1,75 @@
+#{extends 'base-father.html' /} 
+<div class="register-box">
+	<div class="login-title">
+		<h3>用户注册</h3>
+	</div>
+				#{if flash.error}
+				<div class="alert alert-error login-error">${flash.error}</div>
+				#{/if} 
+				#{if flash.success}
+				<div class="alert alert-success">${flash.success}</div>
+				#{/if}
+				<form method="post" action="@{UserSecure.checkRegisterInfo()}"
+					class="form-horizontal">
+					<fieldset>
+						#{authenticityToken /}
+						<div class="control-group">
+							<label for="account" class="control-label">昵称</label>
+							<div class="controls">
+								<input type="text" name="name" value="${flash.name}"
+									id="name" class="input" onblur="check('name');" />
+									<span id="nametip" class="label label-important" style="display: none;">用户名不能为空</span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label for="account" class="control-label">账号</label>
+							<div class="controls">
+								<input type="text" name="account" value="${flash.account}"
+									id="account" class="input" onblur="check('account');" />
+									<span id="accounttip" class="label label-important" style="display: none;">账号不能为空</span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label for="password" class="control-label">密码</label>
+							<div class="controls">
+								<input type="password" name="password" id="password"
+									placeholder="密码不能小于6位" class="input"  onblur="check('password');" />
+									<span id="passwordtip" class="label label-important" style="display: none;">密码不能为空</span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label for="password" name="repeatpassword" class="control-label">重复密码</label>
+							<div class="controls">
+								<input type="password" name="repeatpassword" id="repeatpassword"
+									value="${flash.repeatpassword}" class="input" onblur="checkrepeat();" />
+									<span id="repeatpasswordtip" class="label label-important" style="display: none;">两次密码输入不一样</span>
+							</div>
+						</div>
+					</fieldset>
+					<div class="form-option">
+						<button type="submit" class="btn btn-primary btn-login">
+						&nbsp;&nbsp;注册&nbsp;&nbsp;</button>
+					</div>
+					<a class="goto-signin-tips" href="@{UserSecure.signin}">已有帐号?直接登录吧!</a>
+				</form>
+			</div>
+	<script type="text/javascript">
+		function check(id) {
+             if($('#'+id).val()==null||$('#'+id).val()==''){
+            	 $('#'+id+'tip').show();
+             }else{
+            	 $('#'+id+'tip').hide();
+             }
+		}
+		function checkrepeat(){
+			if($("#password").val()!=$("#repeatpassword").val()){
+				$("#repeatpasswordtip").show();
+			}else{
+				$("#repeatpasswordtip").hide();
+			}
+		}
+	</script>
+
+</body>
+</html>
+

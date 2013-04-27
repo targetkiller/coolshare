@@ -1,0 +1,11 @@
+.dl-horizontal2 dt {
+float: left;
+width: 160px;
+overflow: hidden;
+overflow-x: hidden;
+overflow-y: hidden;
+clear: left;
+text-align: right;
+text-overflow: ellipsis;
+white-space: nowrap;
+}

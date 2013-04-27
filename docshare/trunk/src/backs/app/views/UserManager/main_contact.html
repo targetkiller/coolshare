@@ -1,0 +1,119 @@
+#{extends 'base-backs.html' /}
+#{set main:'active' /}
+#{set 'moreScripts'}
+<script type="text/javascript"
+	src="@{'/public/common/javascripts/WdatePicker.js'}"></script>
+#{/set}
+<ul class="nav nav-tabs myul">
+	<li><a  href="@{UserManager.main_common}">基本信息</a></li>
+	<li class="active"><a  href="#">联系信息</a></li>
+	<li><a  href="@{UserManager.main_password}">修改密码</a></li>
+</ul>
+<form id="updateForm" class="form-horizontal" action="@{UserManager.updateContactInfo}">
+   <span class="big">联系方式</span>
+    <span class="badge btn-inverse btn ml10" onclick="onUpdate()">保存</span>
+    #{if status==200}
+	    <div class="alert alert-success" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${message}
+	    </div>
+	    #{/if}
+	    #{if status==400}
+	    <div class="alert alert-error" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${message}
+	    </div>
+	    #{/if}
+     <hr />
+     
+	<div class="control-group">
+		<label class="control-label" for="sex">姓别</label>
+		<div class="controls">
+			<select id="sex" name="sex">
+			#{if userInfo.sexual==0}
+				<option value=0 selected="selected">请选择</option>
+				<option value=1>男</option>
+				<option value=2>女</option>
+			#{/if}
+			#{if userInfo.sexual==1}
+				<option value=0>请选择</option>
+				<option value=1 selected="selected">男</option>
+				<option value=2>女</option>
+			#{/if}
+			#{if userInfo.sexual==2}
+				<option value=0>请选择</option>
+				<option value=1>男</option>
+				<option value=2 selected="selected">女</option>
+			#{/if}
+			</select>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="birth">出生日期</label>
+		<div class="controls">
+			<input type="text" class="input-xlarge" id="birth" name="birthday" value="${userInfo?.birthday}"
+				onclick="WdatePicker();" placeholder="请输入生日"/>
+		</div>
+	</div>
+	      <div class="control-group">
+	  <label class="control-label" for="email">邮箱</label>
+	  <div class="controls">
+	    <input type="text" class="input-xlarge" name="email" id="email" placeholder="请输入你的邮箱" value=${userInfo?.email}>
+	  </div>
+	  </div>
+	    <div class="control-group">
+	  <label class="control-label" for="phoneNum">长号/短号</label>
+	  <div class="controls">
+	    <input type="text" class="input" name="longTel" id="phoneNum" placeholder="长号" value="${userInfo?.longTel}">
+	    <span class="add-on">/</span>
+	    <input type="text" class="input" name="shortTel" id="phoneNum" placeholder="短号" value="${userInfo?.shortTel}">
+	  </div>
+	  </div>
+
+	   <div class="control-group">
+	  <label class="control-label"  for="QQ">QQ</label>
+	  <div class="controls">
+	    <input type="text"  name="qq" class="input-xlarge" id="QQ" placeholder="请输入你的Q号" value="${userInfo?.qq}">
+	  </div>
+	  </div>
+
+	  <div class="control-group">
+	  <label class="control-label" for="MSN">MSN</label>
+	  <div class="controls">
+	    <input type="text" name="msn" class="input-xlarge" id="MSN" placeholder="请输入你的MSN" value="${userInfo?.msn}">
+	  </div>
+	  </div>
+
+	   <div class="control-group">
+	  <label class="control-label" for="input01">地址</label>
+	  <div class="controls">
+	    <input type="text" name="address" class="input-xlarge" id="input01" placeholder="请输入你的地址" value="${userInfo?.address}">
+	  </div>
+	  </div>
+
+</form>
+<script type="text/javascript">
+    $(document).ready(function(){
+    	$("#message").fadeIn("slow").fadeTo(3E3,0.99).fadeOut("slow");
+     });
+	var flag = 1;
+	function onUpdate() {
+		if (flag == 0) {
+			alert("请改正错误后再保存！");
+		} else {
+			document.getElementById("updateForm").submit();
+		}
+
+	}
+	function onBlur(obj) {
+		if (obj.value == '') {
+			$("#nametip").show();
+			flag = 0;
+		} else {
+			$("#nametip").hide();
+			flag = 1;
+		}
+	}
+	
+</script>

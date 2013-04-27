@@ -1,0 +1,40 @@
+#{extends 'base-backs.html' /}
+#{set uploadin:'active' /}
+
+<div class="page-header">
+  <h3 class="pagetitle">添加文档</h3>
+</div>
+<div>
+	
+	<a href="@{DocumentManager.upload}"><img id="on" src="@{'/public/common/images/upload_on.jpg'}" class="activebtn" onmouseover="upload_on()" ></img></a>
+	<a href="@{DocumentManager.upload}"><img id="down" src="@{'/public/common/images/upload_down.jpg'}" class="activebtn hide"  onmouseout="upload_out()"></img></a>
+	<p type="help-block" class="textcenter">在此添加你的文档</p>
+	</div>
+<hr />
+<ul class="upload_help">
+<h4 >上传需知</h4>
+<li>每次最多上传20份文档，每份文档不超过20M，支持大部分文档格式</li>
+<li>上传涉及侵权内容的文档将会被移除。如何判断文档是否侵权？查看文库协议和用户规则</li>
+<li>上传有问题需要帮助？查看帮助</li>
+<li>为了保证文档能正常显示，我们支持以下格式的文档上传</li>
+</ul>
+	  <dl class="dl-horizontal upload_help">
+        <dt>MS Office文档</dt>
+        <dd>doc,docx</dd>
+		<dt>WPS office系列</dt>
+        <dd>wps</dd>
+        <dt>PDF</dt>
+        <dd>pdf</dd>
+        <dt>纯文本</dt>
+        <dd>txt</dd>
+      </dl>
+<script type="text/javascript">
+function upload_on(){
+	$("#down").show();
+	$("#on").hide();
+}
+function upload_out(){
+	$("#on").show();
+	$("#down").hide();
+}
+</script>

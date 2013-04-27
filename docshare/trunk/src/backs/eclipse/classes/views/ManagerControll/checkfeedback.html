@@ -1,0 +1,30 @@
+#{extends 'base-father.html' /}
+<div class="managerframe">
+	<h1>管理员操作</h1>
+	<div class="managerframe-nav">
+		<a class="btn btn-primary" href="@{ManagerControll.managercheckdocs}">审核文章</a>
+		<a class="btn btn-primary" href="@{ManagerControll.manageraddtag}">添加系统标签</a>
+		<a class="btn ">查看反馈信息</a>
+		<a class="btn btn-mini btn-danger" href="&{'fronts.base'}">回到主页</a>
+	</div>
+	<table class="table">
+	<colgroup>
+		<col width="20%"></col>
+		<col width="80%"></col>
+	</colgroup>
+	<thead>
+		<tr>
+			<th> 用户名</th>
+			<th> 信息</th>
+		</tr>
+	</thead>
+	<tbody>
+		#{list items:feedbackList,as:'feedback'}
+		<tr>
+			<td><a class="hoverlink" href="@{UserZone.Userinfo(feedback.userId)}">${feedback.name}</a></td>
+			<td><a href="@{ManagerControll.checkdetailedfeedback(feedback.id)}">${feedback.content}</a></td>
+		</tr>
+		#{/list}
+	</tbody>
+</table>
+</div>

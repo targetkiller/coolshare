@@ -1,0 +1,6 @@
+Listening for transport dt_socket at address: 8403
+09:42:43,781 INFO  ~ Starting D:\我的文档\桌面\docshare\trunk\src\fronts
+09:42:43,796 WARN  ~ Declaring modules in application.conf is deprecated. Use dependencies.yml instead (module.docshare-common)
+09:42:43,796 INFO  ~ Module docshare-common is available (F:\play-1.2.4\modules\docshare-common)
+09:42:43,828 INFO  ~ Using default cookie domain: local.scauhci.org
+09:42:44,781 WARN  ~ You're running Play! in DEV mode

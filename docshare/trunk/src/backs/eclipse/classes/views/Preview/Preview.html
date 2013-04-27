@@ -1,0 +1,169 @@
+#{extends 'base-father.html' /} 
+<!-- 文档预览 -->
+<div class="preview" >
+	<div class="pretitle">
+		<h1 class="oneline">${document?.title}</h1>
+		<a class="btn btn-mini btn-info"href="&{'fronts.base'}">回到首页</a>
+	</div>
+	<img src="@{'/public/common/images/bookimg.jpg'}" title="文档图标"/>
+	<dl>											
+		<dd><span>作者:&nbsp;</span><span><a href="@{UserZone.Userinfo(user?.id)}">${user?.name}</a></span></dd>
+		<dd><span>分享时间:&nbsp;</span><span>${document?.time.asdate('yyyy年MM月dd')}</span></dd>
+		<dd><span>下载量:&nbsp;</span><span>${document?.downloadNum}</span></dd>
+		<dd><span>收藏量:&nbsp;</span><span>${collectNum}</span></dd>
+		<dd><span>类型:&nbsp;</span><span>${document?.sufix}</span></dd>
+		<dd><span>评分:&nbsp;</span><span>${avgScore}</span></dd>
+		<dd><span>标签:&nbsp;</span>
+		#{list items: tagList,as:'tag'}
+			<span><a href="#">${tag.name}</a></span>
+	    #{/list}
+			
+		</dd>
+		<dd><span>文档简介:&nbsp;</span><span>${document?.summary}</span></dd>
+	</dl>
+	<div class="previewcontroll">
+	#{if flash.isCollected}
+	<a href="@{Preview.Collect(document?.id)}" class="btn btn-primary" style="display:none;" id="colect">收藏</a>
+    <a href="#" class="btn btn-primary" id="isColected">已收藏</a>
+	#{/if}	
+	#{else}
+	<a href="#" class="btn btn-primary" id="colect" onclick="collect(${document?.id});">收藏</a>
+	<a href="#" class="btn btn-primary" style="display:none;" id="isColected">已收藏</a>
+	#{/else}
+		<a href="@{DownLoads.downloadDoc(document.id, document.location, document.sufix)}" class="btn btn-primary">下载</a>
+	#{if isScored}
+		<span>已评分.&nbsp;<button class="btn btn-mini" onclick="scoreAgain()">再次评分?</button></span>
+	#{/if}
+	#{else}
+		<span class="score">评分:&nbsp;
+				<span id="s1" onclick="clickstar('1')" onmouseout="setstar(nowindex)" onmouseover="setstar('1')">★</span>
+				<span id="s2" onclick="clickstar('2')" onmouseout="setstar(nowindex)" onmouseover="setstar('2')">★</span>
+				<span id="s3" onclick="clickstar('3')" onmouseout="setstar(nowindex)" onmouseover="setstar('3')">★</span>
+				<span id="s4" onclick="clickstar('4')" onmouseout="setstar(nowindex)" onmouseover="setstar('4')">★</span>
+				<span id="s5" onclick="clickstar('5')" onmouseout="setstar(nowindex)" onmouseover="setstar('5')">★</span>
+				<span id="scoretip1" style="display:none">很差</span>
+				<span id="scoretip2" style="display:none">较差</span>
+				<span id="scoretip3" style="display:none">还行</span>
+				<span id="scoretip4" style="display:none">推荐</span>
+				<span id="scoretip5" style="display:none">力荐</span>
+		</span>
+		#{/else}
+	</div>
+	<div class="message">
+	 #{if status==200}
+	    <div class="alert alert-success" id="message">
+		<a class="close" data-dismiss="alert">×</a> 
+		${message}
+	    </div>
+	    #{/if}
+	   </div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#message").fadeIn("slow").fadeTo(3E3,0.99).fadeOut("slow");
+	 });
+ 	var nowindex = 0;	//默认几个星
+	var startnum = 5;	//星的个数
+	var selectedcolor = "#F93946";	//选上的颜色
+	var uselectedcolor = "grey";    //未选的颜色
+	function _$(id)
+	{
+	return document.getElementById(id);
+	}
+
+	function setstar(index)
+	{
+		for(var i=1;i<=index;i++){
+			_$("s"+i).style.color=selectedcolor;
+			_$("s"+i).style.cursor="pointer";
+		}
+		for(var i=(index+1);i<=startnum;i++){
+			_$("s"+i).style.color=uselectedcolor;
+			_$("s"+i).style.cursor="pointer";
+		}
+		for(var i=1;i<6;i++){
+			_$("scoretip"+i).style.display="none";
+		}
+			_$("scoretip"+index).style.display="";
+	}
+	setstar(nowindex);
+	function clickstar(index)
+		{
+		$.ajax({
+			   type:'GET',
+			   url:'/Preview/scoreDoc',
+			   data:{
+				   docId:${document.id},
+				   score:index
+			   },
+			   dataType:'json',
+			   success:function(data){
+				   if(data.status==200){
+				   		alert("评分成功!");
+				   	 window.location.href="@{Preview.Preview(document.id)}";
+				   }else if(data.status==401){
+					    alert("评分失败");
+				   }else if(data.status==403){
+				   		alert("你还没有登录，无法评分，请先登录");
+				   		window.location = data.url;
+				   }
+			   },
+			   error:function(){
+				   alert("FAIL");
+				  
+			   }
+			   })
+		}
+	function scoreAgain(){
+		$.ajax({
+			   type:'GET',
+			   url:'/Preview/scoreAgain',
+			   data:{
+				   docId:${document.id},
+			   },
+			   dataType:'json',
+			   success:function(data){
+				   if(data.status==200){
+				   		alert( data.isScored + "," + data.score);
+				   }else if(data.status==401){
+					    alert("评分记录已删除");
+					    window.location.href="@{Preview.Preview(document.id)}";
+				   }else if(data.status==403){
+				   		alert("你还没有登录，无法评分，请先登录");
+				   		window.location = data.url;
+				   }
+			   },
+			   error:function(){
+				   window.location.href="@{Preview.Preview(document.id)}";
+			   }
+			   })
+	}
+	function collect(id){
+		$.ajax({
+			   type:'post',
+			   url:'/Preview/collect',
+			   data:{
+				   docId:id
+			   },
+			   dataType:'json',
+			   success:function(data){
+				   if(data.status==200){
+					   $("#colect").hide();
+					   $("#isColected").show(function(){alert(data.message);} );
+				   }else if(data.status==401){
+					   $("#colect").show();
+					   $("#isColected").show(function(){alert(data.message);} );
+				   }else{
+					   $("#colect").hide();
+					   $("#isColected").show(function(){alert(data.message);} );
+				   }
+			   },
+			   error:function(){
+				   $("#colect").show();
+				   $("#isColected").show(function(){alert("收藏失败!");} );
+				  
+			   }
+			   }) 		
+	}
+</script>

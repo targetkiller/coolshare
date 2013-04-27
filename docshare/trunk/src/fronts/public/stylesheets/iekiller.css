@@ -1,0 +1,27 @@
+.iekiller-outer{
+	border: 1px solid #e1e1e1;
+	width: 400px;
+	position: absolute;
+	top: 0;
+	left: 50%;
+	margin-left: -200px;
+	z-index: 999;
+}
+.iekiller-inner{
+	text-align:center;
+	background-color: yellow;
+	padding: 5px;
+}
+.iekiller-try{
+	text-decoration: none;
+}
+.iekiller-try:hover{
+	text-decoration: underline;
+}
+.iekiller-thanks{
+	color: gray;
+	text-decoration: none;
+}
+.iekiller-thanks:hover{
+	text-decoration: underline;
+}

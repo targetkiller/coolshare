@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--亲，不要默默的观看啦，分享吧~-->
+<html>
+    <head>
+        <title>SCAU HCI 文档分享平台</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Le styles -->
+        #{get 'moreStyles'/}
+        <link rel="shortcut icon" type="image/jpg" href="@{'/public/common/images/favicon.jpg'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/common/stylesheets/bootstrap.min.css'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/common/stylesheets/bootstrap-responsive.min.css'}">
+        <link rel="stylesheet" media="screen" href="@{'/public/common/stylesheets/common.css'}">
+        <script src="@{'/public/common/javascripts/jquery-1.7.1.min.js'}" type="text/javascript"></script>
+        #{get 'moreScripts' /}
+    </head>
+    <body>
+  
+        <!--header开始-->
+        <div class="docshare-nav row">
+            <div class="container">
+                <!--左边logo开始-->
+          
+              <a href="&{'fronts.base'}"> <img class="logo" src="@{'/public/common/images/navlogo.jpg'}"></img></a>
+                <!--左边logo结束-->
+                <!--主导航开始-->
+                
+                <!--主导航顶部开始-->
+                <div class="docshare-nav-right">
+                  
+                 
+                    #{if controllers.UserSecure.connected()}
+                      <a class=" nav-text text-overflow-hidden" href="&{'backs.base'}UserManager/main_common"><i class="icon-user "> </i> </a> 
+                     <a class=" nav-text text-overflow-hidden" href="&{'backs.base'}DocumentManager/upload_in"><i class="icon-heart"> </i> </a> 
+                    <div class=" nav-text text-overflow-hidden">${controllers.UserSecure.getUserName()},你好!</div> 
+                    <a class=" nav-text text-overflow-hidden" onclick="return confirm('确定要退出登录吗？');" href="@{UserSecure.signout}">退出</a>
+                	#{/if}
+                	 #{else}
+                    <a class=" nav-text ml10"  href="@{UserSecure.signin}">登录</a>
+                    <a class=" nav-text ml10"  href="@{UserSecure.register}">注册</a>
+                	#{/else}
+                </div>
+                <!--主导航顶部结束-->
+                <!--主导航结束-->
+            </div>
+        </div>
+        #{doLayout /}
+
+
+        <!--footer开始-->
+        <div class="footer">
+              <div id="back_top" class="gototop">
+                <a href="javascript:void(0);" onclick="goTop();return false;">
+                <img src="@{'/public/common/images/gototop.jpg'}"/>
+                </a>
+            </div>
+            &copy;2013&nbsp;<a href="&{'fronts.base'}application/aboutus" target="_blank">华南农业大学信息学院人机交互研究中心学生部</a>
+        </div>
+			#{if controllers.UserSecure.getUserName()=="admin"}
+        <a href="@{ManagerControll.managercheckdocs}" class="managerlogin btn btn-mini">管理员入口</a>
+        	#{/if}
+        <!--footer结束-->
+<div class="feedback-link-box">
+     <a title="有问题？告诉我们吧！" href="@{Feedbacks.feedback}">用户反馈</a>
+ </div>
+        <!--底部script开始-->
+        <script src="@{'/public/common/javascripts/bootstrap.min.js'}"></script>
+    
+    <script>
+        $(function(){
+            $(".form-horizontal input,.navbar-form input,.form-horizontal textArea").focus(function(){
+                var group = $(this).parents(".control-group").removeClass('error').removeClass('info').removeClass('warning').removeClass('success');
+                group.find('span.help-block').remove();
+                group.find('span.help-inline').html("");
+            });
+        });
+    </script>
+
+    </body>
+</html>
+<script type="text/javascript">
+$(document).ready(function(){
+    var btnScroll=document.getElementById("back_top");
+    btnScroll.style.display="none";
+    var x=0;
+    var fe=$("#back_top");
+    var btnHeight;
+    var allHeight;
+        window.onscroll = function(){
+       allHeight=document.body.scrollHeight;//网页正文全文高
+       x=(document.body.scrollTop||document.documentElement.scrollTop);//滚动的高度
+       btnHeight=document.documentElement.clientHeight+x;//按钮离顶部的距离
+           if(btnHeight>(allHeight-110)){//按钮到达底部（如果不考虑底部的高度，可以去掉if代码，只保留else代码）
+        btnScroll.style.top=allHeight-110+'px'; //110为按钮高度+底部高度
+        }else{
+            btnScroll.style.top=btnHeight-42+'px'; //42为按钮的高度
+        }
+        if(x==0){fe.fadeOut(1000);}else{fe.fadeIn(1000);}
+    }
+});
+//回到顶部
+function goTop(acceleration, time) {
+    acceleration = acceleration || 0.1;
+    time = time || 16;
+    var x1 = 0;
+    var y1 = 0;
+    var x2 = 0;
+    var y2 = 0;
+    var x3 = 0;
+    var y3 = 0;
+    if (document.documentElement) {
+       x1 = document.documentElement.scrollLeft || 0;
+       y1 = document.documentElement.scrollTop || 0;
+    }
+    if (document.body) {
+       x2 = document.body.scrollLeft || 0;
+       y2 = document.body.scrollTop || 0;
+    }
+    var x3 = window.scrollX || 0;
+    var y3 = window.scrollY || 0;
+    // 滚动条到页面顶部的水平距离
+    var x = Math.max(x1, Math.max(x2, x3));
+    // 滚动条到页面顶部的垂直距离
+    var y = Math.max(y1, Math.max(y2, y3));
+    // 滚动距离 = 目前距离 / 速度, 因为距离原来越小, 速度是大于 1 的数, 所以滚动距离会越来越小
+    var speed = 1 + acceleration;
+    window.scrollTo(Math.floor(x / speed), Math.floor(y / speed));
+    // 如果距离不为零, 继续调用迭代本函数
+    if(x > 0 || y > 0) {
+       var invokeFunction = "goTop(" + acceleration + ", " + time + ")";
+       window.setTimeout(invokeFunction, time);
+    }
+}
+</script>
+

@@ -1,0 +1,35 @@
+#{extends 'base-father.html' /} 
+<div class="login-box">
+	<div class="login-title">
+		<h3>用户登录</h3>
+	</div>
+	#{if flash.error}
+	<div class="alert alert-error login-error">${flash.error}</div>
+	#{/if} 
+	#{if flash.success}
+	<div class="alert alert-success">${flash.success}</div>
+	#{/if}
+	<form method="post" action="@{UserSecure.authenticate()}" class="form-horizontal">
+		<fieldset>
+			#{authenticityToken /}
+			<div class="control-group">
+				<label for="account" class="control-label" >账号</label>
+				<div class="controls">
+					<input type="text" name="account" value="${flash.account}" id="account" class="input" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label for="password" class="control-label">密码</label>
+				<div class="controls">
+					<input type="password" name="password" id="password" value="${flash.password}" class="input" />
+				</div>
+			</div>
+		</fieldset>
+		<div class="form-option">
+			<button type="submit" class="btn btn-primary btn-login">&nbsp;&nbsp;&nbsp;登录&nbsp;&nbsp;&nbsp;</button>
+		</div>
+		<a class="goto-register-tips" href="@{UserSecure.register}">还没有帐号?先注册吧!</a>
+	</form>
+</div>
+
+ 

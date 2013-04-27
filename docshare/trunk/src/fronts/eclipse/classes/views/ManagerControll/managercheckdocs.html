@@ -1,0 +1,59 @@
+#{extends 'base-father.html' /}
+<div class="managerframe">
+	<h1>管理员操作</h1>
+	<div class="managerframe-nav">
+		<a class="btn">审核文章</a>
+		<a class="btn btn-primary" href="@{ManagerControll.manageraddtag}">添加系统标签</a>
+		<a class="btn btn-primary" href="@{ManagerControll.checkfeedback}">查看反馈信息</a>
+		<a class="btn btn-mini btn-danger" href="&{'fronts.base'}">回到主页</a>
+	</div>
+	<table class="table">
+	<colgroup>
+		<col width="50%"></col>
+		<col width="30%"></col>
+		<col width="20%"></col>
+	</colgroup>
+	<thead>
+		<tr>
+			<th> 文档名称</th>
+			<th> 作者</th>
+			<th> 操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		#{list items:documentList,as:'document'}
+		<tr>
+			<td><a class="hoverlink oneline" href="@{Preview.Preview(document.id)}">${document.title}</a></td>
+			<td><a href="@{UserZone.Userinfo(document.userId)}">${document.authorName}</a></td>
+			<td><button onclick="deleteDoc(${document.id})" class="btn btn-danger btn-mini">删除</button></td>
+		</tr>
+		#{/list}
+	</tbody>
+</table>
+</div>
+
+<script type="text/javascript">
+function deleteDoc(id){
+ 	if(confirm("你确定要删除吗?")==1){
+ 		$.ajax({
+			   type:'post',
+			   url:'/ManagerControll/deleteDoc',
+			   data:{
+				   docId:id
+			   },
+			   dataType:'json',
+			   success:function(data){
+				   if(data.status==200){
+					    alert("删除文档成功!");
+					    window.location.href="@{ManagerControll.managercheckdocs}";
+				   }else{
+					   alert("删除文档失败!");
+				   }
+			   },
+			   error:function(){
+				  alert("删除文档失败!");
+			   }
+			   }) 		
+ 	}
+ }
+ </script>
